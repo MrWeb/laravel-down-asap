@@ -1,6 +1,6 @@
 {
     "name": "mrweb/laravel-down-asap",
-    "description": "Laravel multitenant package",
+    "description": "Put Laravel in maintenance mode once the DB is idle",
     "license": "MIT",
     "repositories": [{
         "type": "git",
@@ -8,19 +8,17 @@
     }],
     "autoload": {
         "psr-4": {
-            "Futurelabs\\Bootplant\\": "src"
+            "Mrweb\\DownAsap\\": "src"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Futurelabs\\Bootplant\\BootplantServiceProvider"
+                "Mrweb\\DownAsap\\DownAsapServiceProvider"
             ]
         }
     },
     "require": {
-        "laravel/framework": "5.8.*",
-        "laravel/passport": "^7.2",
-        "spatie/laravel-permission": "^2.30"
+        "laravel/framework": "^6.2",
     }
 }
