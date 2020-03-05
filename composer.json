@@ -4,7 +4,7 @@
     "license": "MIT",
     "repositories": [{
         "type": "git",
-        "url": "git@bitbucket.org:MrWeb/laravel-down-asap.git"       
+        "url": "https://github.com/MrWeb/laravel-down-asap"       
     }],
     "autoload": {
         "psr-4": {
