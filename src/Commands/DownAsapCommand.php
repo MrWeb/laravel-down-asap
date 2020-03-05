@@ -14,7 +14,7 @@ class DownAsapCommand extends Command
      */
     protected $signature = 'down:asap {--retry=} {--idle=}';
 
-    private $deafultIdleMinutes  = 1;
+    private $deafultIdleMinutes  = 3;
     private $deafultRetrySeconds = 30;
 
     private $retryAfterSeconds, $waitForMinutes, $dbName, $minutesFromLastUpdate, $showTimePassed;
