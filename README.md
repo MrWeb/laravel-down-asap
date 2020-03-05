@@ -2,6 +2,10 @@
 
 Put Laravel "down" (maintenance mode) as soon as the DB is not used for the selected amount of minutes avoiding users to be interrupted while doing some other actions.
 
+### Installation:
+
+`composer require mrweb/laravel-down-asap`
+
 ### Basic Usage:
 
 `php artisan down:asap`
