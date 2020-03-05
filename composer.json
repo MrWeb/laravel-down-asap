@@ -3,7 +3,7 @@
     "description": "Put Laravel in maintenance mode once the DB is idle",
     "license": "MIT",
     "repositories": [{
-        "type": "git",
+        "type": "vcs",
         "url": "https://github.com/MrWeb/laravel-down-asap"       
     }],
     "autoload": {
@@ -18,8 +18,8 @@
             ]
         }
     },
-    "minimum-stability": "dev",
     "require": {
         "laravel/framework": "^6.0 || ^7.0"
-    }
+    },
+    "minimum-stability": "1.0.2"
 }
