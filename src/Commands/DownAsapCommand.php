@@ -32,9 +32,16 @@ class DownAsapCommand extends Command
         $this->waitForMinutes    = (int) ($this->option('idle') ?? $this->deafultIdleMinutes);
 
         $this->dbName = env('DB_DATABASE');
+        $dbConn       = env('DB_CONNECTION');
+        $dbDriver     = config("database.connections.{$dbConn}.driver");
         if (!$this->dbName) {
             return $this->error("Database not set in .env file");
         }
+
+        if ($dbDriver != 'mysql') {
+            return $this->error("Main database connection must be MySQL, found '{$dbDriver}'. Exit");
+        }
+        return true;
     }
 
     private function checkLastDbMovement()
@@ -61,7 +68,6 @@ class DownAsapCommand extends Command
                 $this->info("Retrying...");
                 $this->checkLastDbMovement();
                 if ($this->minutesFromLastUpdate > $this->waitForMinutes) {
-                    $this->info("Updating maintenance mode...");
                     $this->appDown();
                 } else {
                     $this->tryLoop();
@@ -78,23 +84,25 @@ class DownAsapCommand extends Command
      */
     public function handle()
     {
-        $this->init();
-        $this->checkLastDbMovement();
+        if ($this->init()) {
+            $this->checkLastDbMovement();
 
-        $this->info("DB idle request: {$this->waitForMinutes} minute/s");
+            $this->info("DB idle request: {$this->waitForMinutes} minute/s");
 
-        if ($this->minutesFromLastUpdate > $this->waitForMinutes) {
-            $this->info("Last DB update {$this->minutesFromLastUpdate} minute/s ago");
-            $this->appDown();
-        } else {
-            $this->info("Last DB update " . $this->showTimePassed . " ago (" . $this->lastDbUpdate->update_time . "). Rechecking in " . $this->retryAfterSeconds . " seconds");
-            $this->tryLoop();
+            if ($this->minutesFromLastUpdate > $this->waitForMinutes) {
+                $this->info("Last DB update {$this->minutesFromLastUpdate} minute/s ago");
+                $this->appDown();
+            } else {
+                $this->info("Last DB update " . $this->showTimePassed . " ago (" . $this->lastDbUpdate->update_time . "). Rechecking in " . $this->retryAfterSeconds . " seconds");
+                $this->tryLoop();
+            }
         }
     }
 
     public function appDown()
     {
         \Artisan::call('down');
+        $this->comment("Updating maintenance mode...");
         $this->comment('Application is now in maintenance mode.');
     }
 }
