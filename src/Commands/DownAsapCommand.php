@@ -58,8 +58,13 @@ class DownAsapCommand extends Command
             $bar->advance();
             if ($sec == $this->retryAfterSeconds) {
                 $bar->clear();
-                $this->comment("Retrying...");
-                $this->tryLoop();
+                $this->info("Retrying...");
+                $this->checkLastDbMovement();
+                if ($this->minutesFromLastUpdate > $this->waitForMinutes) {
+                    $this->appDown();
+                } else {
+                    $this->tryLoop();
+                }
             }
         }
         $bar->finish();
@@ -75,11 +80,13 @@ class DownAsapCommand extends Command
         $this->init();
         $this->checkLastDbMovement();
 
+        $this->info("DB idle request: {$this->waitForMinutes} minute/s");
+
         if ($this->minutesFromLastUpdate > $this->waitForMinutes) {
-            $this->comment($this->minutesFromLastUpdate);
+            $this->info("Last DB update {$this->minutesFromLastUpdate} minute/s ago");
             $this->appDown();
         } else {
-            $this->comment("Last DB update " . $this->showTimePassed . " ago (" . $this->lastDbUpdate->update_time . "). Rechecking in " . $this->retryAfterSeconds . " seconds");
+            $this->info("Last DB update " . $this->showTimePassed . " ago (" . $this->lastDbUpdate->update_time . "). Rechecking in " . $this->retryAfterSeconds . " seconds");
             $this->tryLoop();
         }
     }
@@ -87,6 +94,6 @@ class DownAsapCommand extends Command
     public function appDown()
     {
         // \Artisan::call('down');
-        $this->info('Application is now in maintenance mode.');
+        $this->comment('Application is now in maintenance mode.');
     }
 }
