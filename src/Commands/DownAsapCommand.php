@@ -61,6 +61,7 @@ class DownAsapCommand extends Command
                 $this->info("Retrying...");
                 $this->checkLastDbMovement();
                 if ($this->minutesFromLastUpdate > $this->waitForMinutes) {
+                    $this->info("Updating maintenance mode...");
                     $this->appDown();
                 } else {
                     $this->tryLoop();
@@ -93,7 +94,7 @@ class DownAsapCommand extends Command
 
     public function appDown()
     {
-        // \Artisan::call('down');
+        \Artisan::call('down');
         $this->comment('Application is now in maintenance mode.');
     }
 }
